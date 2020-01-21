@@ -39,4 +39,4 @@ class TestClass:
 
     def test3(self):
         print("Executing test3!")
-        assert False
+        assert True
