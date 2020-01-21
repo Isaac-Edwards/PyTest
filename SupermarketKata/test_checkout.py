@@ -36,4 +36,34 @@ def test_when_same_item_added_multiple_times_subtotal_is_correct(checkout):
     assert subtotal == approx(0.80)
 
 def test_can_add_discount_rules(checkout):
-    checkout.add_discount("banana", 3, 2)
+    checkout.add_discount("banana", 3, 0.40)
+
+def test_can_apply_discount_rules_and_get_correct_subtotal(checkout):
+    checkout.add_discount("banana", 3, 0.40)
+    checkout.add_item("banana")
+    checkout.add_item("banana")
+    checkout.add_item("banana")
+    assert checkout.subtotal() == approx(0.40)
+
+def test_can_exceed_discount_quantities_and_get_correct_subtotal(checkout):
+    checkout.add_discount("banana", 3, 0.40)
+    checkout.add_item("banana")
+    checkout.add_item("banana")
+    checkout.add_item("banana")
+    checkout.add_item("banana")
+    assert checkout.subtotal() == approx(0.60)
+
+def test_if_discount_quantities_not_achieved_still_get_correct_subtotal(checkout):
+    checkout.add_discount("banana", 3, 0.40)
+    checkout.add_item("banana")
+    assert checkout.subtotal() == approx(0.20)
+
+def test_can_double_discount_quantities_and_get_discount_twice(checkout):
+    checkout.add_discount("banana", 3, 0.40)
+    checkout.add_item("banana")
+    checkout.add_item("banana")
+    checkout.add_item("banana")
+    checkout.add_item("banana")
+    checkout.add_item("banana")
+    checkout.add_item("banana")
+    assert checkout.subtotal() == approx(0.80)
