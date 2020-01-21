@@ -1,3 +1,9 @@
+def setup_module(module):
+    print("Setup module!")
+
+def teardown_module(module):
+    print("Teardown Module!")
+
 def setup_function(function):
     if function == test1:
         print("\nSetting up test1!")
