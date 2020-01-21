@@ -1,3 +1,8 @@
+class Discount:
+    def __init__(self, number_of_items, price):
+        self.number_of_items = number_of_items
+        self.price = price
+
 class Checkout:
     def __init__(self):
         self.prices = {}
@@ -14,12 +19,12 @@ class Checkout:
         self.prices[name] = price
 
     def add_discount(self, name, number_of_items, price):
-        self.discounts[name] = (number_of_items, price)
+        self.discounts[name] = Discount(number_of_items, price)
 
     def apply_discounts(self):
         for discounted_item in self.discounts:
-            number_of_items = self.discounts[discounted_item][0]
-            price = self.discounts[discounted_item][1]
+            number_of_items = self.discounts[discounted_item].number_of_items
+            price = self.discounts[discounted_item].price
             while self.quantities[discounted_item] >= number_of_items:
                 self.quantities[discounted_item] -= number_of_items
                 if "discounted "+ discounted_item in self.quantities.keys():
