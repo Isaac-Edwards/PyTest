@@ -1,13 +1,13 @@
-import pytest
+from pytest import fixture, approx
 from checkout import Checkout
 
-@pytest.fixture()
+@fixture()
 def checkout():
     checkout = Checkout()
     return checkout
 
-def test_can_add_item_price(checkout):
-    checkout.add_item_price("bananas", "0.20")
-
-def test_can_add_item(checkout):
+def test_can_calculate_current_total(checkout):
+    checkout.add_item_price("bananas", 0.20)
     checkout.add_item("bananas")
+    subtotal = checkout.subtotal()
+    assert subtotal == approx(0.20)
