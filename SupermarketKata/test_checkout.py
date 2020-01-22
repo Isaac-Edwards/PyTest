@@ -1,5 +1,6 @@
 from pytest import fixture, approx, raises
 from checkout import Checkout, PriceException
+from unittest.mock import MagicMock
 
 @fixture()
 def checkout():
@@ -71,3 +72,25 @@ def test_can_double_discount_quantities_and_get_discount_twice(checkout):
 def test_exception_thrown_when_item_added_with_no_price(checkout):
     with raises(PriceException):
         checkout.add_item("Isaac Edwards")
+
+def test_can_read_prices_from_file(checkout, monkeypatch):
+    mock_file = MagicMock()
+    mock_file.__enter__.return_value.__iter__.return_value = ["paper 5"]
+    mock_open = MagicMock(return_value=mock_file)
+    monkeypatch.setattr("builtins.open", mock_open)
+    mock_exists = MagicMock(return_value=True)
+    monkeypatch.setattr("os.path.exists", mock_exists)
+    checkout.read_prices_from_file("price_file")
+    mock_open.assert_called_once_with("price_file")
+    checkout.add_item("paper")
+    assert checkout.subtotal() == 5
+
+def test_exception_thrown_when_price_file_not_readable(checkout, monkeypatch):
+    mock_file = MagicMock()
+    mock_file.__enter__.return_value.__iter__.return_value = ["paper 5"]
+    mock_open = MagicMock(return_value=mock_file)
+    monkeypatch.setattr("builtins.open", mock_open)
+    mock_exists = MagicMock(return_value=False)
+    monkeypatch.setattr("os.path.exists", mock_exists)
+    with raises(Exception):
+        checkout.read_prices_from_file("bad file")

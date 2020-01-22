@@ -1,3 +1,5 @@
+import os
+
 class PriceException(Exception):
     pass
 
@@ -37,6 +39,14 @@ class Checkout:
                 else:
                     self.quantities["discounted "+ discounted_item] = 1
                     self.prices["discounted " + discounted_item] = price
+
+    def read_prices_from_file(self, filename):
+        if not os.path.exists(filename):
+            raise Exception("bad file path")
+        with open(filename) as inFile:
+            for line in inFile:
+                tokens = line.split()
+                self.add_item_price(tokens[0], int(tokens[1]))
 
     def subtotal(self):
         self.apply_discounts()
