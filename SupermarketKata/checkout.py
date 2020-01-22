@@ -1,3 +1,6 @@
+class PriceException(Exception):
+    pass
+
 class Discount:
     def __init__(self, number_of_items, price):
         self.number_of_items = number_of_items
@@ -10,6 +13,8 @@ class Checkout:
         self.discounts = {}
 
     def add_item(self, name):
+        if name not in self.prices:
+            raise PriceException("Price has not yet been added for this item!")
         if name in self.quantities:
             self.quantities[name] += 1
         else: 

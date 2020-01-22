@@ -1,5 +1,5 @@
-from pytest import fixture, approx
-from checkout import Checkout
+from pytest import fixture, approx, raises
+from checkout import Checkout, PriceException
 
 @fixture()
 def checkout():
@@ -67,3 +67,7 @@ def test_can_double_discount_quantities_and_get_discount_twice(checkout):
     checkout.add_item("banana")
     checkout.add_item("banana")
     assert checkout.subtotal() == approx(0.80)
+
+def test_exception_thrown_when_item_added_with_no_price(checkout):
+    with raises(PriceException):
+        checkout.add_item("Isaac Edwards")
